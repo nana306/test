@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>标题</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<link rel="stylesheet" href="reset.css">
+	<style>
+	#outer{width: 386px;height: 272px;border:1px solid red;margin:30px auto;overflow: hidden;position: relative;}
+		#inner{width: 386px;height: 272px;overflow: hidden;}
+		#con{width: 5000px;height: 272px;float: left;}
+		#con img{width: 386px;height: 272px;float: left;}
+		#num{overflow: hidden;position: absolute;left: 120px;bottom: 20px;}
+		#num li{float: left;background: #ccc;margin-left: 10px;width:22px;height: 22px;line-height: 22px;text-align: center;font-size: 16px;cursor: pointer;}
+		#num .select{background: red;}
+		#left{background:url(images/fx1.png) 0 0 no-repeat;width: 25px;height: 24px;position: absolute;left: 10px;top: 120px;cursor: pointer;}
+		#right{background:url(images/fx2.png) 0 0 no-repeat;width: 25px;height: 24px;position: absolute;right: 10px;top: 120px;cursor: pointer;}
+	</style>
+</head>
+<body>
+	<div id="outer">
+		<div id="inner">
+			<div id="con">
+				<img src="images/01.jpg" alt="">
+				<img src="images/02.jpg" alt="">
+				<img src="images/03.jpg" alt="">
+				<img src="images/04.jpg" alt="">
+				<img src="images/05.jpg" alt="">
+			</div>
+			<ul id="num">
+				<li class="select">1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+			</ul>
+			<p id="left"></p>
+			<p id="right"></p>
+		</div>
+	</div>
+	<script>
+	 	var inner=document.getElementById('inner');
+	 	var con=document.getElementById('con');
+	 	var imgs=con.getElementsByTagName('img');
+	 	var num=document.getElementById('num');
+	 	var lis=num.getElementsByTagName('li');
+	 	var left=document.getElementById('left');
+	 	var right=document.getElementById('right');
+	 	var firstImg=con.children[0].cloneNode(true);
+	 	var lastImg=con.children[imgs.length-1].cloneNode(true);
+	 	con.appendChild(firstImg);
+	 	con.insertBefore(lastImg,con.children[0]);
+	 	var a=0,b=1,time=null,time1=null;
+	 	function move () {
+	 		clearInterval(time);
+	 		var start=inner.scrollLeft;
+	 		var end=imgs[0].offsetWidth*b;
+	 		var change=end-start;
+	 		var step=0;
+	 		var stepmax=20;
+	 		var everystep=change/stepmax;
+	 		time=setInterval(function () {
+	 			step++;
+	 			if (step>=stepmax) {
+	 				clearInterval(time);
+	 			};
+	 			start=start+everystep;
+	 			inner.scrollLeft=start;
+	 		},20);
+	 		for (var i = 0; i < lis.length; i++) {
+	 			lis[i].className='';
+	 		};
+	 		lis[a].className='select';
+	 	}
+	 	function automove () {
+	 		a++;
+	 		if (a>=lis.length) {
+	 			a=0;
+	 		};
+	 		b++;
+	 		if (b>=imgs.length) {
+	 			b=2;
+	 			inner.scrollLeft=imgs[0].offsetWidth;
+	 		};
+	 		move();
+	 	}
+	 	time1=setInterval(automove,2000);
+	 	left.onclick=function () {
+	 		clearInterval(time1);
+	 		a--;
+	 		if (a<0) {
+	 			a=lis.length-1;
+	 		};
+	 		b--;
+	 		if (b<0) {
+	 			b=imgs.length-3;
+	 			inner.scrollLeft=imgs[0].offsetWidth*(b+1);
+	 		};
+	 		move();
+	 		time1=setInterval(automove,2000);
+	 	}
+	 	right.onclick=function (){
+	 		clearInterval(time1);
+	 		a++;
+	 		if (a>=lis.length) {
+	 			a=0;
+	 		};
+	 		b++;
+	 		if (b>=imgs.length) {
+	 			b=2;
+	 			inner.scrollLeft=imgs[0].offsetWidth;
+	 		};
+	 		move();
+	 		time1=setInterval(automove,2000);
+	 	}
+	 	for (var i = 0; i < lis.length; i++) {
+	 		lis[i].onclick=function () {
+	 			clearInterval(time1);
+	 			for (var i = 0; i < lis.length; i++) {
+	 				if (lis[i]==this) {
+	 					a=i;
+	 					b=i+1;
+	 					move();
+	 					time1=setInterval(automove,2000);
+	 				};
+	 			};
+	 		}
+	 	};
+
+	</script>
+</body>
+</html>
